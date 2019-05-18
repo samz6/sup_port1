@@ -4,7 +4,7 @@ import './App.css';
 import Download from './Download';
 import { connect } from 'react-redux';
 import { showModal, hideModal } from './actions/ExportModalActions';
-import ExportModal from './components/ExportModal'
+import ExportModal from './components/ExportModal';
 
 const mapDispatchToProps = dispatch => ({
     hideModal: () => dispatch(hideModal()),
@@ -24,7 +24,7 @@ class App extends React.Component {
         this.props.hideModal();
     }
 
-    openExportModal = (event) => {
+    openExportModal = event => {
         console.log('vivek');
         this.props.showModal(
             {
@@ -34,14 +34,14 @@ class App extends React.Component {
             },
             'alert'
         );
-    }
+    };
 
     render() {
         return (
             <div className="App">
-                <header className="App-header" />
-
-                <button onClick={this.openExportModal}>confirm</button>
+                <button className="primary-button" onClick={this.openExportModal}>
+                    Download Report
+                </button>
                 <ExportModal />
             </div>
         );
