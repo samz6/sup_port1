@@ -1,108 +1,93 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Modal from "@material-ui/core/Modal";
-import Button from "@material-ui/core/Button";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Modal from '@material-ui/core/Modal';
+import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
+
+
+const mapStateToProps = state => ({
+    ...state.exportModal
+});
 
 function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
 
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`
-  };
+    return {
+        top: `61px`,
+        height: '450px',
+        right: `0`
+    };
 }
 
 const styles = theme => ({
-  paper: {
-    position: "absolute",
-    width: theme.spacing.unit * 50,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    outline: "none"
-  }
+    paper: {
+        position: 'absolute',
+        width: theme.spacing.unit * 50,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing.unit * 4,
+        outline: 'none'
+    }
 });
 
 class ExportModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false
-    };
-    this.closeModal = this.handleClose.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps !== this.props) {
-      this.setState({
-        modalIsOpen: nextProps.modalProps.open
-      });
+    constructor(props) {
+        super(props);
+        this.state = {
+            modalIsOpen: false
+        };
     }
-  }
 
-  closeModal() {
-    this.setState({ modalIsOpen: false });
-  }
-  state = {
-    open: false
-  };
+    componentWillReceiveProps(nextProps) {
+        if (nextProps !== this.props) {
+            console.log(nextProps)
+            this.setState({
+                modalIsOpen: nextProps.modalProps.open
+            });
+        }
+    }
 
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
+    closeModal = () => {
+        this.setState({ modalIsOpen: false });
+    };
 
-  handleClose = () => {
-    this.setState({ open: false });
-  };
+    render() {
+        const { classes } = this.props;
 
-  render() {
-    const { classes } = this.props;
-
-    return (
-      <div>
-        <Typography gutterBottom>
-          Click to get the full Modal experience!
-        </Typography>
-        <Button onClick={this.handleOpen}>Open Modal</Button>
-        <Modal
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          open={this.state.open}
-          onClose={this.handleClose}
-        >
-          <div style={getModalStyle()} className={classes.paper}>
-            <Typography variant="h6" id="modal-title">
-              Text in a modal
-            </Typography>
-            <Typography variant="subtitle1" id="simple-modal-description">
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
-            <ExportModal Wrapped />
-          </div>
-        </Modal>
-      </div>
-    );
-  }
+        return (
+            <div>
+                <Modal
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                    open={this.state.modalIsOpen}
+                    onClose={this.closeModal}
+                >
+                    <div style={getModalStyle()} className={classes.paper}>
+                        <Typography variant="h6" id="modal-title">
+                            Text in a modal
+                        </Typography>
+                        <Typography variant="subtitle1" id="simple-modal-description">
+                            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                        </Typography>
+                    </div>
+                </Modal>
+            </div>
+        );
+    }
 }
 
 ExportModal.propTypes = {
-  classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired
 };
 
 // We need an intermediary variable for handling the recursive nesting.
 const ExportModalWrapped = withStyles(styles)(ExportModal);
 
-//export default ExportModalWrapped;
+// export default ExportModalWrapped;
 
 export default connect(
-  mapStateToProps,
-  null
+    mapStateToProps,
+    null
 )(ExportModalWrapped);

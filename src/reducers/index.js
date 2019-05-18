@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import ExportModalReducer from "./ExportModalReducer";
+import exportModal from "./ExportModalReducer";
 
 export default combineReducers({
-  ExportModalReducer
+    exportModal
 });
