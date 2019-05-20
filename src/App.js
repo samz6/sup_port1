@@ -25,7 +25,6 @@ class App extends React.Component {
     }
 
     openExportModal = event => {
-        console.log('vivek');
         this.props.showModal(
             {
                 open: true,
