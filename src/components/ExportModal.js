@@ -1,23 +1,23 @@
-import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
-import FormControl from '@material-ui/core/FormControl';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuItem from '@material-ui/core/MenuItem';
-import Modal from '@material-ui/core/Modal';
-import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-import CheckableItem from './CheckableItem';
+import Checkbox from "@material-ui/core/Checkbox";
+import Chip from "@material-ui/core/Chip";
+import FormControl from "@material-ui/core/FormControl";
+import Icon from "@material-ui/core/Icon";
+import IconButton from "@material-ui/core/IconButton";
+import Input from "@material-ui/core/Input";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import MenuItem from "@material-ui/core/MenuItem";
+import Modal from "@material-ui/core/Modal";
+import Paper from "@material-ui/core/Paper";
+import Select from "@material-ui/core/Select";
+import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import PropTypes from "prop-types";
+import React from "react";
+import { connect } from "react-redux";
+import CheckableItem from "./CheckableItem";
 
 const mapStateToProps = state => ({
   ...state.exportModal
@@ -25,81 +25,81 @@ const mapStateToProps = state => ({
 
 function getModalStyle() {
   return {
-    top: '0',
-    height: '100vh',
-    width: '50%',
-    minHeight: '450px',
-    minWidth: '500px',
-    right: '0px',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '0'
+    top: "0",
+    height: "100vh",
+    width: "50%",
+    minHeight: "450px",
+    minWidth: "500px",
+    right: "0px",
+    display: "flex",
+    flexDirection: "column",
+    padding: "0"
   };
 }
 
 const styles = theme => ({
   paper: {
-    position: 'absolute',
+    position: "absolute",
     width: theme.spacing.unit * 50,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
-    outline: 'none'
+    outline: "none"
   },
 
   closeButton: {
-    alignSelf: 'flex-end',
-    color: 'darkgray',
-    padding: '1rem',
-    marginRight: '0.5rem'
+    alignSelf: "flex-end",
+    color: "darkgray",
+    padding: "1rem",
+    marginRight: "0.5rem"
   },
 
   mainContainer: {
-    margin: '0 1rem 2rem 1rem',
-    borderTop: '5px solid teal'
+    margin: "0 1rem 2rem 1rem",
+    borderTop: "5px solid teal"
   },
 
   exportOptionHeader: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    margin: '1rem'
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: "1rem"
   },
 
   exportOptionSelect: {
-    width: '50%'
+    width: "50%"
   },
 
   exportFieldSelectionContainer: {
-    margin: '3rem 1rem 1rem 1rem'
+    margin: "3rem 1rem 1rem 1rem"
   },
 
   selectionListContainer: {
-    display: 'flex',
-    justifyItems: 'flex-start',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    display: "flex",
+    justifyItems: "flex-start",
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
 
   columnSelectionList: {
-    border: '1px solid darkgray',
-    marginRight: '0.5rem',
-    flex: '1',
-    maxHeight: 'calc(100vh - 230px)',
-    overflowY: 'scroll'
+    border: "1px solid darkgray",
+    marginRight: "0.5rem",
+    flex: "1",
+    maxHeight: "calc(100vh - 230px)",
+    overflowY: "scroll"
   },
 
   regionSelectionList: {
-    border: '1px solid darkgray',
-    marginLeft: '0.5rem',
-    maxHeight: 'calc(100vh - 230px)',
-    overflowY: 'scroll',
-    flex: '1'
+    border: "1px solid darkgray",
+    marginLeft: "0.5rem",
+    maxHeight: "calc(100vh - 230px)",
+    overflowY: "scroll",
+    flex: "1"
   },
 
   listItemOverride: {
-    padding: '0'
+    padding: "0"
   }
 });
 
@@ -117,12 +117,12 @@ const MenuProps = {
 class ExportModal extends React.Component {
   exportOptions = [
     {
-      label: 'PDF',
-      value: 'pdf'
+      label: "PDF",
+      value: "pdf"
     },
     {
-      label: 'Excel',
-      value: 'xls'
+      label: "Excel",
+      value: "xls"
     }
   ];
 
@@ -130,8 +130,20 @@ class ExportModal extends React.Component {
     super(props);
     this.state = {
       modalIsOpen: false,
-      selectedExportOption: ['pdf'],
-      selectedColumns: [1]
+      selectedExportOption: ["pdf"],
+      selectedColumns: [],
+      columnsDetail: [
+        { columnName: "Organization Name", isSelected: true },
+        { columnName: "Plan Code/Contract #", isSelected: false },
+        { columnName: "PBP", isSelected: false },
+        { columnName: "Segment", isSelected: true },
+        { columnName: "Plan Name", isSelected: true },
+        { columnName: "Product Type", isSelected: false },
+        { columnName: "Plan Type", isSelected: false },
+        { columnName: "Region", isSelected: true },
+        { columnName: "County", isSelected: false },
+        { columnName: "Current Enrollees", isSelected: false }
+      ]
     };
   }
 
@@ -154,17 +166,25 @@ class ExportModal extends React.Component {
     });
   };
 
-  columnSelectionHandler = value => () => {
-    const currentIndex = this.state.selectedColumns.indexOf(value);
-    const newChecked = [...this.state.selectedColumns];
+  selectAllHandler = event => {
+    let columns = this.state.columnsDetail;
+    columns = columns.map(column => {
+      column.isSelected = true;
+      return column;
+    });
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
+    this.setState({ columnsDetail: columns });
+  };
 
-    this.setState({ selectedColumns: newChecked });
+  columnSelectionHandler = selectedColumn => () => {
+    const currentIndex = this.state.columnsDetail.findIndex(
+      column => column.columnName === selectedColumn.columnName
+    );
+
+    this.state.columnsDetail[currentIndex].isSelected = !this.state
+      .columnsDetail[currentIndex].isSelected;
+
+    this.setState({ columnsDetail: this.state.columnsDetail });
   };
 
   render() {
@@ -179,7 +199,11 @@ class ExportModal extends React.Component {
           onClose={this.closeModal}
         >
           <div style={getModalStyle()} className={classes.paper}>
-            <IconButton color="secondary" className={classes.closeButton} aria-label="Add an alarm">
+            <IconButton
+              color="secondary"
+              className={classes.closeButton}
+              aria-label="Add an alarm"
+            >
               <Icon>close</Icon>
             </IconButton>
 
@@ -197,7 +221,11 @@ class ExportModal extends React.Component {
                     renderValue={selected => (
                       <div className={classes.chips}>
                         {selected.map(value => (
-                          <Chip key={value} label={value} className={classes.chip} />
+                          <Chip
+                            key={value}
+                            label={value}
+                            className={classes.chip}
+                          />
                         ))}
                       </div>
                     )}
@@ -220,12 +248,21 @@ class ExportModal extends React.Component {
 
                 <div className={classes.selectionListContainer}>
                   <List className={classes.columnSelectionList}>
-                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(value => (
-                      <ListItem key={value} button className={classes.listItemOverride}>
+                    <ListItem onClick={this.selectAllHandler}>
+                      Select All
+                    </ListItem>
+                    {this.state.columnsDetail.map(column => (
+                      <ListItem
+                        key={column.columnName}
+                        button
+                        className={classes.listItemOverride}
+                      >
                         <CheckableItem
-                          onSelectionChange={this.columnSelectionHandler(value)}
-                          label={`Line item ${value + 1}`}
-                          selected={this.state.selectedColumns.indexOf(value) !== -1}
+                          onSelectionChange={this.columnSelectionHandler(
+                            column
+                          )}
+                          label={column.columnName}
+                          selected={column.isSelected}
                         />
                       </ListItem>
                     ))}
@@ -233,11 +270,17 @@ class ExportModal extends React.Component {
 
                   <List className={classes.regionSelectionList}>
                     {[0, 1, 2, 3].map(value => (
-                      <ListItem key={value} button className={classes.listItemOverride}>
+                      <ListItem
+                        key={value}
+                        button
+                        className={classes.listItemOverride}
+                      >
                         <CheckableItem
                           onSelectionChange={this.columnSelectionHandler(value)}
                           label={`Line item ${value + 1}`}
-                          selected={this.state.selectedColumns.indexOf(value) !== -1}
+                          selected={
+                            this.state.selectedColumns.indexOf(value) !== -1
+                          }
                         />
                       </ListItem>
                     ))}
