@@ -1,53 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Download from './Download';
-import { connect } from 'react-redux';
-import { showModal, hideModal } from './actions/ExportModalActions';
-import ExportModal from './components/exportModal/ExportModal';
+import React from "react";
+import "./App.css";
+import Download from "./Download";
+import { connect } from "react-redux";
+import { showModal, hideModal } from "./actions/ExportModalActions";
+import ExportModal from "./components/exportModal/ExportModal";
 
 const mapDispatchToProps = dispatch => ({
-    hideModal: () => dispatch(hideModal()),
-    showModal: modalProps => {
-        dispatch(showModal({ modalProps }));
-    }
+  hideModal: () => dispatch(hideModal()),
+  showModal: modalProps => {
+    dispatch(showModal({ modalProps }));
+  }
 });
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.closeModal = this.closeModal.bind(this);
-        this.openAlertModal = this.openExportModal.bind(this);
-    }
+  constructor(props) {
+    super(props);
+    this.closeModal = this.closeModal.bind(this);
+    this.openAlertModal = this.openExportModal.bind(this);
+  }
 
-    closeModal(event) {
-        this.props.hideModal();
-    }
+  closeModal(event) {
+    this.props.hideModal();
+  }
 
-    openExportModal = event => {
-        this.props.showModal(
-            {
-                open: true,
-                title: 'Alert Modal',
-                closeModal: this.closeModal
-            },
-            'alert'
-        );
-    };
+  openExportModal = event => {
+    this.props.showModal(
+      {
+        open: true,
+        title: "Alert Modal",
+        closeModal: this.closeModal
+      },
+      "alert"
+    );
+  };
 
-    render() {
-        return (
-            <div className="App">
-                <button className="primary-button" onClick={this.openExportModal}>
-                    Download Report
-                </button>
-                <ExportModal />
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div className="App">
+        <button className="primary-button" onClick={this.openExportModal}>
+          Download Report
+        </button>
+        <ExportModal />
+      </div>
+    );
+  }
 }
 
 export default connect(
-    null,
-    mapDispatchToProps
+  null,
+  mapDispatchToProps
 )(App);

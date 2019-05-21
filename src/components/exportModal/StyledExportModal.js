@@ -2,6 +2,7 @@ import styled from "styled-components";
 import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import FormControl from "@material-ui/core/FormControl";
+import Paper from "@material-ui/core/Paper";
 
 export const IconButtonStyled = styled(IconButton)`
   align-self: flex-end;
@@ -10,14 +11,29 @@ export const IconButtonStyled = styled(IconButton)`
   margin-right: 0.5rem;
 `;
 
-// const PaperStyled = styled(Paper)`
-// position: absolute;
-// width: 100px;
-// backgroundColor: theme.palette.background.paper,
-// boxShadow: theme.shadows[5],
-// padding: theme.spacing.unit * 4,
-// outline: "none"
-// `;
+export const MainContainerStyled = styled(Paper)`
+  elevation: ${({ theme }) => theme.elevation};
+  margin: 0 1rem 2rem 1rem;
+  border-top: 5px solid teal;
+  box-shadow: 0px 2px 5px grey;
+`;
+
+export const MyPaper = styled.div`
+  top: 0;
+  height: 100vh;
+  width: 50%;
+  min-height: 450px;
+  min-width: 500px;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: absolute;
+  background-color: ${({ theme }) => theme.palette.background.paper};
+  box-shadow: ${({ theme }) => theme.shadows[5]};
+  padding: ${({ theme }) => theme.spacing.unit * 4};
+  outline: none;
+`;
 
 export const ExportOptionHeaderStyled = styled.div`
   display: flex;
@@ -28,7 +44,7 @@ export const ExportOptionHeaderStyled = styled.div`
 `;
 
 export const ExportOptionSelectStyled = styled(FormControl)`
-  width: 40%;
+  width: 50%;
 `;
 
 export const ExportFieldSelectionContainerStyled = styled.div`

@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import Icon from '@material-ui/core/Icon';
-import { withStyles } from '@material-ui/core/styles';
+import React from "react";
+import styled from "styled-components";
+import Icon from "@material-ui/core/Icon";
+import { withStyles } from "@material-ui/core/styles";
 
 const MainContainer = styled.div`
   display: flex;
@@ -9,23 +9,19 @@ const MainContainer = styled.div`
   justify-content: space-between;
   min-height: 20px;
   width: 100%;
-  background-color: ${props => (props.selected ? '#ccc' : '#fff')};
-  font-weight: ${props => (props.selected ? 'bold' : 'normal')};
+  background-color: ${props => (props.selected ? "#ccc" : "#fff")};
+  font-weight: ${props => (props.selected ? "bold" : "normal")};
   padding: 15px;
   transition: all 0.4s ease;
 `;
 
 const SelectIcon = styled(Icon)`
-  display: ${props => (props.selected ? 'block' : 'none')};
+  display: ${props => (props.selected ? "block" : "none")};
 `;
 
 const styles = theme => ({});
 
 export class CheckableItem extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   clickHandler = () => {
     this.props.onSelectionChange(!this.props.selected);
   };
