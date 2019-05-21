@@ -4,7 +4,7 @@ import './App.css';
 import Download from './Download';
 import { connect } from 'react-redux';
 import { showModal, hideModal } from './actions/ExportModalActions';
-import ExportModal from './components/ExportModal';
+import ExportModal from './components/exportModal/ExportModal';
 
 const mapDispatchToProps = dispatch => ({
     hideModal: () => dispatch(hideModal()),

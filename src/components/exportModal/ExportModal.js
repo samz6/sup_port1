@@ -1,13 +1,7 @@
-import Checkbox from "@material-ui/core/Checkbox";
 import Chip from "@material-ui/core/Chip";
-import FormControl from "@material-ui/core/FormControl";
 import Icon from "@material-ui/core/Icon";
-import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
-import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
 import MenuItem from "@material-ui/core/MenuItem";
 import Modal from "@material-ui/core/Modal";
 import Paper from "@material-ui/core/Paper";
@@ -17,7 +11,17 @@ import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import CheckableItem from "./CheckableItem";
+import CheckableItem from "../CheckableItem";
+import styled from "styled-components";
+import {
+  IconButtonStyled,
+  ExportOptionHeaderStyled,
+  ExportOptionSelectStyled,
+  ExportFieldSelectionContainerStyled,
+  SelectionListContainerStyled,
+  ColumnSelectionListStyled,
+  RegionSelectionListStyled
+} from "./StyledExportModal";
 
 const mapStateToProps = state => ({
   ...state.exportModal
@@ -199,21 +203,17 @@ class ExportModal extends React.Component {
           onClose={this.closeModal}
         >
           <div style={getModalStyle()} className={classes.paper}>
-            <IconButton
-              color="secondary"
-              className={classes.closeButton}
-              aria-label="Add an alarm"
-            >
+            <IconButtonStyled color="secondary">
               <Icon>close</Icon>
-            </IconButton>
+            </IconButtonStyled>
 
             <Paper className={classes.mainContainer} elevation={1}>
-              <div className={classes.exportOptionHeader}>
+              <ExportOptionHeaderStyled>
                 <Typography variant="subtitle2" gutterBottom>
                   Export Option
                 </Typography>
 
-                <FormControl className={classes.exportOptionSelect}>
+                <ExportOptionSelectStyled>
                   {/* <InputLabel htmlFor="select-multiple">Export Option</InputLabel> */}
                   <Select
                     multiple
@@ -239,15 +239,15 @@ class ExportModal extends React.Component {
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
-              </div>
-              <div className={classes.exportFieldSelectionContainer}>
+                </ExportOptionSelectStyled>
+              </ExportOptionHeaderStyled>
+              <ExportFieldSelectionContainerStyled>
                 <Typography variant="subtitle2" gutterBottom>
                   Export Field Selection
                 </Typography>
 
-                <div className={classes.selectionListContainer}>
-                  <List className={classes.columnSelectionList}>
+                <SelectionListContainerStyled>
+                  <ColumnSelectionListStyled>
                     <ListItem onClick={this.selectAllHandler}>
                       Select All
                     </ListItem>
@@ -266,9 +266,9 @@ class ExportModal extends React.Component {
                         />
                       </ListItem>
                     ))}
-                  </List>
+                  </ColumnSelectionListStyled>
 
-                  <List className={classes.regionSelectionList}>
+                  <RegionSelectionListStyled>
                     {[0, 1, 2, 3].map(value => (
                       <ListItem
                         key={value}
@@ -284,9 +284,9 @@ class ExportModal extends React.Component {
                         />
                       </ListItem>
                     ))}
-                  </List>
-                </div>
-              </div>
+                  </RegionSelectionListStyled>
+                </SelectionListContainerStyled>
+              </ExportFieldSelectionContainerStyled>
             </Paper>
           </div>
         </Modal>
