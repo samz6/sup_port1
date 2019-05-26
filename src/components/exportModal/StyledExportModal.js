@@ -1,8 +1,12 @@
-import styled from "styled-components";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import FormControl from "@material-ui/core/FormControl";
-import Paper from "@material-ui/core/Paper";
+import styled from 'styled-components';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import FormControl from '@material-ui/core/FormControl';
+import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Switch from '@material-ui/core/Switch';
+import ListItem from '@material-ui/core/ListItem';
+import green from '@material-ui/core/colors/green';
 
 export const IconButtonStyled = styled(IconButton)`
   align-self: flex-end;
@@ -72,4 +76,31 @@ export const RegionSelectionListStyled = styled(List)`
   flex: 1;
   max-height: calc(100vh - 230px);
   overflow-y: scroll;
+`;
+
+export const FiltersContainerStyled = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: start;
+  justify-items: start;
+  margin: 0 2rem;
+`;
+
+export const GreenSwitch = withStyles({
+  switchBase: {
+    color: green[300],
+    '&$checked': {
+      color: green[500]
+    },
+    '&$checked + $track': {
+      backgroundColor: green[500]
+    }
+  },
+  checked: {},
+  track: {}
+})(Switch);
+
+export const SelectAllListItemStyled = styled(ListItem)`
+  user-select: none;
+  cursor: pointer;
 `;

@@ -1,29 +1,33 @@
-import Chip from "@material-ui/core/Chip";
-import Icon from "@material-ui/core/Icon";
-import Input from "@material-ui/core/Input";
-import ListItem from "@material-ui/core/ListItem";
-import MenuItem from "@material-ui/core/MenuItem";
-import Modal from "@material-ui/core/Modal";
-import Select from "@material-ui/core/Select";
-import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import PropTypes from "prop-types";
-import React from "react";
-import { connect } from "react-redux";
-import CheckableItem from "../CheckableItem";
-import { ThemeProvider } from "styled-components";
-import { createMuiTheme } from "@material-ui/core";
+import { createMuiTheme } from '@material-ui/core';
+import Chip from '@material-ui/core/Chip';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Icon from '@material-ui/core/Icon';
+import Input from '@material-ui/core/Input';
+import ListItem from '@material-ui/core/ListItem';
+import MenuItem from '@material-ui/core/MenuItem';
+import Modal from '@material-ui/core/Modal';
+import Select from '@material-ui/core/Select';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { ThemeProvider } from 'styled-components';
+import CheckableItem from '../CheckableItem';
 import {
-  IconButtonStyled,
+  ColumnSelectionListStyled,
+  ExportFieldSelectionContainerStyled,
   ExportOptionHeaderStyled,
   ExportOptionSelectStyled,
-  ExportFieldSelectionContainerStyled,
-  SelectionListContainerStyled,
-  ColumnSelectionListStyled,
-  RegionSelectionListStyled,
+  FiltersContainerStyled,
+  IconButtonStyled,
   MainContainerStyled,
-  MyPaper
-} from "./StyledExportModal";
+  MyPaper,
+  RegionSelectionListStyled,
+  GreenSwitch,
+  SelectionListContainerStyled,
+  SelectAllListItemStyled
+} from './StyledExportModal';
 
 const mapStateToProps = state => ({
   ...state.exportModal
@@ -40,7 +44,7 @@ const mapStateToProps = state => ({
 
 const styles = theme => ({
   listItemOverride: {
-    padding: "0"
+    padding: '0'
   }
 });
 
@@ -64,12 +68,12 @@ const MenuProps = {
 class ExportModal extends React.Component {
   exportOptions = [
     {
-      label: "CSV",
-      value: "csv"
+      label: 'CSV',
+      value: 'csv'
     },
     {
-      label: "Excel",
-      value: "xls"
+      label: 'Excel',
+      value: 'xls'
     }
   ];
 
@@ -77,19 +81,37 @@ class ExportModal extends React.Component {
     super(props);
     this.state = {
       modalIsOpen: false,
-      selectedExportOption: ["pdf"],
+      selectedExportOption: ['pdf'],
       selectedColumns: [],
       columnsDetail: [
-        { columnName: "Organization Name", isSelected: true },
-        { columnName: "Plan Code/Contract #", isSelected: false },
-        { columnName: "PBP", isSelected: false },
-        { columnName: "Segment", isSelected: true },
-        { columnName: "Plan Name", isSelected: true },
-        { columnName: "Product Type", isSelected: false },
-        { columnName: "Plan Type", isSelected: false },
-        { columnName: "Region", isSelected: true },
-        { columnName: "County", isSelected: false },
-        { columnName: "Current Enrollees", isSelected: false }
+        { columnName: 'Organization Name', isSelected: true },
+        { columnName: 'Plan Code/Contract #', isSelected: false },
+        { columnName: 'PBP', isSelected: false },
+        { columnName: 'Segment', isSelected: true },
+        { columnName: 'Plan Name', isSelected: true },
+        { columnName: 'Product Type', isSelected: false },
+        { columnName: 'Plan Type', isSelected: false },
+        { columnName: 'Region', isSelected: true },
+        { columnName: 'County', isSelected: false },
+        { columnName: 'Current Enrollees', isSelected: false }
+      ],
+      filters: [
+        {
+          label: '90 days',
+          value: true
+        },
+        {
+          label: '30 days',
+          value: false
+        },
+        {
+          label: 'Mail order',
+          value: true
+        },
+        {
+          label: 'Retail',
+          value: true
+        }
       ]
     };
   }
@@ -115,10 +137,25 @@ class ExportModal extends React.Component {
 
   selectAllHandler = event => {
     let columns = this.state.columnsDetail;
-    columns = columns.map(column => {
-      column.isSelected = true;
-      return column;
-    });
+
+    let totalSelectedCols = 0;
+    for (const col of columns) {
+      if (col.isSelected === true) {
+        totalSelectedCols += 1;
+      }
+    }
+
+    if (totalSelectedCols === columns.length) {
+      columns = columns.map(column => {
+        column.isSelected = false;
+        return column;
+      });
+    } else {
+      columns = columns.map(column => {
+        column.isSelected = true;
+        return column;
+      });
+    }
 
     this.setState({ columnsDetail: columns });
   };
@@ -135,17 +172,28 @@ class ExportModal extends React.Component {
     this.setState({ ...this.state, columnsDetail: columns });
   };
 
+  filterChangeHandler = filter => event => {
+    console.log({ filter });
+    const tempFilters = [...this.state.filters];
+    console.log({ tempFilters });
+    for (const tempFilter of tempFilters) {
+      if (tempFilter.label === filter.label) {
+        tempFilter.value = !tempFilter.value;
+        break;
+      }
+    }
+
+    this.setState({
+      filters: tempFilters
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
     return (
       <div>
-        <Modal
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          open={this.state.modalIsOpen}
-          onClose={this.closeModal}
-        >
+        <Modal open={this.state.modalIsOpen} onClose={this.closeModal}>
           <ThemeProvider theme={theme}>
             <MyPaper>
               <IconButtonStyled color="secondary">
@@ -182,6 +230,26 @@ class ExportModal extends React.Component {
                     </Select>
                   </ExportOptionSelectStyled>
                 </ExportOptionHeaderStyled>
+
+                <FiltersContainerStyled>
+                  {this.state.filters.map(filter => {
+                    return (
+                      <FormControlLabel
+                        control={
+                          <GreenSwitch
+                            checked={filter.value}
+                            onChange={this.filterChangeHandler(filter)}
+                            value={filter.value}
+                            color="primary"
+                          />
+                        }
+                        label={filter.label}
+                        key={filter.label}
+                      />
+                    );
+                  })}
+                </FiltersContainerStyled>
+
                 <ExportFieldSelectionContainerStyled>
                   <Typography variant="subtitle2" gutterBottom>
                     Export Field Selection
@@ -189,9 +257,9 @@ class ExportModal extends React.Component {
 
                   <SelectionListContainerStyled>
                     <ColumnSelectionListStyled>
-                      <ListItem onClick={this.selectAllHandler}>
+                      <SelectAllListItemStyled onClick={this.selectAllHandler}>
                         Select All
-                      </ListItem>
+                      </SelectAllListItemStyled>
                       {this.state.columnsDetail.map(column => (
                         <ListItem
                           key={column.columnName}
@@ -199,9 +267,7 @@ class ExportModal extends React.Component {
                           className={classes.listItemOverride}
                         >
                           <CheckableItem
-                            onSelectionChange={this.columnSelectionHandler(
-                              column
-                            )}
+                            onSelectionChange={this.columnSelectionHandler(column)}
                             label={column.columnName}
                             selected={column.isSelected}
                           />
@@ -211,19 +277,11 @@ class ExportModal extends React.Component {
 
                     <RegionSelectionListStyled>
                       {[0, 1, 2, 3].map(value => (
-                        <ListItem
-                          key={value}
-                          button
-                          className={classes.listItemOverride}
-                        >
+                        <ListItem key={value} button className={classes.listItemOverride}>
                           <CheckableItem
-                            onSelectionChange={this.columnSelectionHandler(
-                              value
-                            )}
+                            onSelectionChange={this.columnSelectionHandler(value)}
                             label={`Line item ${value + 1}`}
-                            selected={
-                              this.state.selectedColumns.indexOf(value) !== -1
-                            }
+                            selected={this.state.selectedColumns.indexOf(value) !== -1}
                           />
                         </ListItem>
                       ))}
