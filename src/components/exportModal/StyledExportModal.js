@@ -25,6 +25,7 @@ export const MainContainerStyled = styled(Paper)`
 export const MyPaper = styled.div`
   top: 0;
   height: 100vh;
+  height: auto;
   width: 50%;
   min-height: 450px;
   min-width: 500px;
@@ -68,6 +69,12 @@ export const ColumnSelectionListStyled = styled(List)`
   flex: 1;
   max-height: calc(100vh - 230px);
   overflow-y: scroll;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+
+  &:first-child {
+    margin-right: 1rem;
+  }
 `;
 
 export const RegionSelectionListStyled = styled(List)`
@@ -75,7 +82,7 @@ export const RegionSelectionListStyled = styled(List)`
   margin-right: 0.5rem;
   flex: 1;
   max-height: calc(100vh - 230px);
-  overflow-y: scroll;
+  // overflow-y: scroll;
 `;
 
 export const FiltersContainerStyled = styled.div`
@@ -103,4 +110,5 @@ export const GreenSwitch = withStyles({
 export const SelectAllListItemStyled = styled(ListItem)`
   user-select: none;
   cursor: pointer;
+  min-height: 54px;
 `;

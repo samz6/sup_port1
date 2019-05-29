@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core';
+import { createMuiTheme, ListItemText } from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Icon from '@material-ui/core/Icon';
@@ -93,8 +93,26 @@ class ExportModal extends React.Component {
         { columnName: 'Plan Type', isSelected: false },
         { columnName: 'Region', isSelected: true },
         { columnName: 'County', isSelected: false },
-        { columnName: 'Current Enrollees', isSelected: false }
+        { columnName: 'Current Enrollees', isSelected: false },
+        { columnName: 'ABC Column 1', isSelected: false },
+        { columnName: 'ABC Column 2', isSelected: false },
+        { columnName: 'ABC Column 3', isSelected: false },
+        { columnName: 'Organization Name', isSelected: true },
+        { columnName: 'Plan Code/Contract #', isSelected: false },
+        { columnName: 'PBP', isSelected: false },
+        { columnName: 'Segment', isSelected: true },
+        { columnName: 'Plan Name', isSelected: true },
+        { columnName: 'Product Type', isSelected: false },
+        { columnName: 'Plan Type', isSelected: false },
+        { columnName: 'Region', isSelected: true },
+        { columnName: 'County', isSelected: false },
+        { columnName: 'Current Enrollees', isSelected: false },
+        { columnName: 'ABC Column 1', isSelected: false },
+        { columnName: 'ABC Column 2', isSelected: false },
+        { columnName: 'ABC Column 3', isSelected: false }
       ],
+      columnsDetail1: [],
+      columnsDetail2: [],
       filters: [
         {
           label: '90 days',
@@ -114,6 +132,8 @@ class ExportModal extends React.Component {
         }
       ]
     };
+
+    this.splitColumnsDetails();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -123,6 +143,31 @@ class ExportModal extends React.Component {
         modalIsOpen: nextProps.modalProps.open
       });
     }
+
+    // TODO: To write logic for checking for comparing the columnsDetails props and when it is getti ng change then only we have call splitColumnsDetails()
+    // if () { this.splitColumnsDetails(); }
+    this.splitColumnsDetails();
+  }
+
+  splitColumnsDetails() {
+    const cd = this.state.columnsDetail;
+    let cd1 = [];
+    let cd2 = [];
+    if (cd.length === 0) {
+    } else if (cd.length <= 10) {
+      cd1 = cd;
+    } else if (cd.length > 10 && cd.length <= 20) {
+      cd1 = cd.slice(0, 10);
+      cd2 = cd.slice(10);
+    } else {
+      cd1 = cd.slice(0, cd.length / 2);
+      cd2 = cd.slice(cd.length / 2);
+    }
+
+    this.setState({
+      columnsDetail1: cd1,
+      columnsDetail2: cd2
+    });
   }
 
   closeModal = () => {
@@ -135,41 +180,70 @@ class ExportModal extends React.Component {
     });
   };
 
-  selectAllHandler = event => {
-    let columns = this.state.columnsDetail;
+  isAllColumnsSelected = () => {
+    let cd1 = this.state.columnsDetail1;
+    let cd2 = this.state.columnsDetail2;
 
     let totalSelectedCols = 0;
-    for (const col of columns) {
+    for (const col of cd1) {
       if (col.isSelected === true) {
         totalSelectedCols += 1;
       }
     }
 
-    if (totalSelectedCols === columns.length) {
-      columns = columns.map(column => {
+    for (const col of cd2) {
+      if (col.isSelected === true) {
+        totalSelectedCols += 1;
+      }
+    }
+
+    return totalSelectedCols === cd1.length + cd2.length;
+  };
+
+  selectAllHandler = event => {
+    let cd1 = this.state.columnsDetail1;
+    let cd2 = this.state.columnsDetail2;
+
+    if (this.isAllColumnsSelected()) {
+      cd1 = cd1.map(column => {
+        column.isSelected = false;
+        return column;
+      });
+
+      cd2 = cd2.map(column => {
         column.isSelected = false;
         return column;
       });
     } else {
-      columns = columns.map(column => {
+      cd1 = cd1.map(column => {
+        column.isSelected = true;
+        return column;
+      });
+
+      cd2 = cd2.map(column => {
         column.isSelected = true;
         return column;
       });
     }
 
-    this.setState({ columnsDetail: columns });
+    this.setState({ columnsDetail1: cd1, columnsDetail2: cd2 });
   };
 
-  columnSelectionHandler = selectedColumn => () => {
-    const currentIndex = this.state.columnsDetail.findIndex(
+  columnSelectionHandler = (columnName, selectedColumn) => () => {
+    let changedColumn =
+      columnName === 'leftCol' ? this.state.columnsDetail1 : this.state.columnsDetail2;
+
+    const currentIndex = changedColumn.findIndex(
       column => column.columnName === selectedColumn.columnName
     );
 
-    const columns = this.state.columnsDetail;
-
+    const columns = changedColumn;
     columns[currentIndex].isSelected = !columns[currentIndex].isSelected;
 
-    this.setState({ ...this.state, columnsDetail: columns });
+    // this.setState({ ...this.state, columnsDetail: columns });
+    columnName === 'leftCol'
+      ? this.setState({ columnsDetail: columns })
+      : this.setState({ columnsDetail2: columns });
   };
 
   filterChangeHandler = filter => event => {
@@ -258,16 +332,16 @@ class ExportModal extends React.Component {
                   <SelectionListContainerStyled>
                     <ColumnSelectionListStyled>
                       <SelectAllListItemStyled onClick={this.selectAllHandler}>
-                        Select All
+                        {this.isAllColumnsSelected() ? 'Unselect All' : 'Select All'}
                       </SelectAllListItemStyled>
-                      {this.state.columnsDetail.map(column => (
+                      {this.state.columnsDetail1.map(column => (
                         <ListItem
                           key={column.columnName}
                           button
                           className={classes.listItemOverride}
                         >
                           <CheckableItem
-                            onSelectionChange={this.columnSelectionHandler(column)}
+                            onSelectionChange={this.columnSelectionHandler('leftCol', column)}
                             label={column.columnName}
                             selected={column.isSelected}
                           />
@@ -275,17 +349,21 @@ class ExportModal extends React.Component {
                       ))}
                     </ColumnSelectionListStyled>
 
-                    <RegionSelectionListStyled>
-                      {[0, 1, 2, 3].map(value => (
-                        <ListItem key={value} button className={classes.listItemOverride}>
+                    <ColumnSelectionListStyled>
+                      {this.state.columnsDetail2.map(column => (
+                        <ListItem
+                          key={column.columnName}
+                          button
+                          className={classes.listItemOverride}
+                        >
                           <CheckableItem
-                            onSelectionChange={this.columnSelectionHandler(value)}
-                            label={`Line item ${value + 1}`}
-                            selected={this.state.selectedColumns.indexOf(value) !== -1}
+                            onSelectionChange={this.columnSelectionHandler('rightCol', column)}
+                            label={column.columnName}
+                            selected={column.isSelected}
                           />
                         </ListItem>
                       ))}
-                    </RegionSelectionListStyled>
+                    </ColumnSelectionListStyled>
                   </SelectionListContainerStyled>
                 </ExportFieldSelectionContainerStyled>
               </MainContainerStyled>
